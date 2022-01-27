@@ -9,6 +9,13 @@ export default function attachDomHooks (bridge) {
     worked: true
   })
   */
+  //
+  // bridge.on('test', r => {
+  //     alert('from dom hook')
+  //     console.log("log from dom hook", r)
+  // })
 
   detectQ(bridge)
+
+  console.log("Dom Hooks run")
 }

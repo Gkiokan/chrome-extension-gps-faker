@@ -80,6 +80,8 @@ module.exports = configure(function (ctx) {
             'public': path.resolve(__dirname, './public'),
           }
 
+          cfg.devtool = 'cheap-module-source-map'
+
           cfg.plugins.push(
               // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
           )

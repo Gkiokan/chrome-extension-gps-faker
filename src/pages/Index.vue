@@ -8,14 +8,37 @@
 
         <Location v-if="showNewLocation" @done="showNewLocation = false" />
 
-        <q-separate class="q-my-lg" />
-
         <h3 class="q-mb-none text-h6 text-weight-light">Locations </h3>
 
+        <q-select v-model="selected" :options="locations"
+                  label="Aktuelle Auswahl" stack-label
+                  menu-anchor="bottom start" menu-self="bottom start" >
+            <template v-slot:option="scope">
+              <q-item dense v-bind="scope.itemProps">
+                <q-item-section>
+                  <q-item-label>
+                    <span class="q-mr-md text-weight-bold">{{ scope.opt.name }}</span>
+                    <small>{{ scope.opt.lat }} | {{ scope.opt.lng }}</small>
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+
+            <template v-slot:selected-item="scope">
+              <q-chip removable dense
+                @remove="scope.removeAtIndex(scope.index)"
+                :tabindex="scope.tabindex"
+                color="white" text-color="secondary" class="q-ma-none q-pr-lg"
+              >
+                <span class="q-mr-md text-weight-bold">{{ scope.opt.name }}</span>
+                <small>{{ scope.opt.lat }} | {{ scope.opt.lng }}</small>
+              </q-chip>
+            </template>
+        </q-select>
 
         <q-space style="height: 100px" />
 
-        <q-btn label="get location" @click="getLocation" />
+        <q-btn label="test" @click="test" />
 
         <pre>{{ data }}</pre>
     </div>
@@ -31,8 +54,27 @@ export default defineComponent({
 
     data(){ return {
         showNewLocation: false,
-        data: null
+        data: null,
+        selected: null,
+
+        locations: [
+            { name: 'Keine Auswahl', lat: null, lng: null },
+            { name: 'Lindau', lat: '47.555984', lng: '9.684057' },
+            { name: 'Reutin', lat: '47.552563', lng: '9.701841' },
+            { name: 'Dietmannsried', lat: '47.812837', lng: '10.290245' },
+            { name: 'MM', lat: '47.955380', lng: '10.197768' },
+            { name: 'Masi', lat: '47.972948', lng: '10.186935' },
+            { name: 'Buchloe', lat: '48.031909', lng: '10.715616' },
+        ]
     }},
+
+    mounted(){
+        this.$q.bex.on('test', this.testPayload)
+    },
+
+    beforeDestroy(){
+        this.$q.bex.off('test', this.testPayload)
+    },
 
     methods: {
         getLocation(){
@@ -44,6 +86,18 @@ export default defineComponent({
             });
         },
 
+        test(){
+            // alert('running test')
+            this.$q.bex.send('test', { magic: true, selected: this.selected })
+                .then( r => {
+                    console.log(r)
+                })
+        },
+
+        testPayload(){
+            console.log("Running test payload")
+        }
+
     }
 })
 </script>
@@ -53,6 +107,6 @@ export default defineComponent({
 .main {
   display: block;
   width: 500px;
-  height: 300px;
+  height: 500px;
 }
 </style>

@@ -37,6 +37,12 @@ export default function attachBackgroundHooks (bridge /* , allActiveConnections 
     })
   })
 
+  bridge.on('test', d => {
+    // alert('background hook', d)
+    bridge.send('test', d)
+    // console.log("test in background hook", d)
+  })
+
   /*
   // EXAMPLES
   // Listen to a message from the client

@@ -33,7 +33,8 @@
     "<all_urls>",
     "storage",
     "tabs",
-    "activeTab"
+    "activeTab",
+    "geolocation"
   ],
   "web_accessible_resources": [
     "www/*",
