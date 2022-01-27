@@ -90,6 +90,7 @@ export default defineComponent({
             // alert('running test')
             this.$q.bex.send('test', { magic: true, selected: this.selected })
                 .then( r => {
+                    alert("Standort " + this.selected.name + " gesetzt")
                     console.log(r)
                 })
         },
