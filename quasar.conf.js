@@ -5,6 +5,9 @@
 
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
+const path = require('path');
+const fs = require('fs');
+const webpack = require('webpack')
 
 const { configure } = require('quasar/wrappers');
 
@@ -21,6 +24,7 @@ module.exports = configure(function (ctx) {
     // https://quasar.dev/quasar-cli/boot-files
     boot: [
       'axios',
+      'c',
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -67,6 +71,21 @@ module.exports = configure(function (ctx) {
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
       chainWebpack (/* chain */) {
         //
+      },
+
+      extendWebpack (cfg) {
+          cfg.resolve.alias = {
+            ...cfg.resolve.alias,
+            '~': path.resolve(__dirname, './src'),
+            'public': path.resolve(__dirname, './public'),
+          }
+
+          cfg.plugins.push(
+              // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+          )
+
+          // console.log(cfg.optimization)
+          // console.log(cfg.optimization.splitChunks.cacheGroups)
       },
     },
 

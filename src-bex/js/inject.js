@@ -1,37 +1,3 @@
-// Hooks added here have a bridge allowing communication between the BEX Content Script and the Quasar Application.
-// More info: https://quasar.dev/quasar-cli/developing-browser-extensions/content-hooks
-
-const getLocation = function(){
-  console.log("running get location")
-
-  navigator.geolocation.getCurrentPosition(function(position) {
-      console.log(position);
-  });
-}
-
-const fake = {
-    coords: {
-        accuracy: 11.000,
-        altitude: null,
-        altitudeAccuracy: null,
-        heading: null,
-        speed: null,
-        latitude: 11.111111,
-        longitude: 22.22222,
-        magic: "g was here",
-    },
-    timestamp: 99999999
-}
-
-const backup = navigator.geolocation.getCurrentPosition
-console.log(backup)
-const newPosition = function(success){
-    console.log("odl override")
-    success(fake)
-}
-
-navigator.geolocation.getCurrentPosition = newPosition
-
 var inject = function (e) {
   if (navigator) {
     if (navigator.geolocation) {
@@ -63,7 +29,7 @@ var inject = function (e) {
 };
 
 var script_1 = document.createElement('script');
-script_1.textContent = "(" + inject + ")(" + JSON.stringify(fake) + ")";
+script_1.textContent = "(" + inject + ")(" + JSON.stringify(options) + ")";
 document.documentElement.appendChild(script_1);
 
 if (document.documentElement.dataset.geolocscriptallow !== "true") {
@@ -86,24 +52,4 @@ if (document.documentElement.dataset.geolocscriptallow !== "true") {
     }
   }`;
   window.top.document.documentElement.appendChild(script_2);
-}
-
-export default function attachContentHooks (/* bridge */) {
-  // Hook into the bridge to listen for events sent from the client BEX.
-  /*
-  bridge.on('some.event', event => {
-    if (event.data.yourProp) {
-      // Access a DOM element from here.
-      // Document in this instance is the underlying website the contentScript runs on
-      const el = document.getElementById('some-id')
-      if (el) {
-        el.value = 'Quasar Rocks!'
-      }
-    }
-  })
-  */
-
-  console.log("content hook here")
-
-  getLocation()
 }
