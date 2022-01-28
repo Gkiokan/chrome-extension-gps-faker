@@ -6,7 +6,7 @@
 
         <q-btn dense no-caps class="q-px-md" color="grey-9" label="Neueen Standort anlegen" @click="showNewLocation = !showNewLocation" v-if="!showNewLocation" />
 
-        <Location v-if="showNewLocation" @done="showNewLocation = false" />
+        <Location v-if="showNewLocation" @done="showNewLocation = false" @add="addNewLocation" />
 
         <h3 class="q-mb-none text-h6 text-weight-light">Standorte </h3>
 
@@ -48,7 +48,7 @@
                   <span class="q-mr-md text-weight-bold">{{item.name }}</span>
                   <small>{{item.lat }} | {{item.lng }}</small>
               </q-item-section>
-              <q-item-section side>  </q-item-section>
+              <q-item-section side> <q-btn round flat icon="delete" v-if="item.removeable" @click.stop="removeLocation(item)" /> </q-item-section>
 
           </q-item>
         </q-list>
@@ -75,43 +75,54 @@ export default defineComponent({
         data: null,
         selected: null,
 
-        locations: [
-            { name: 'Keine Auswahl', lat: null, lng: null },
-            { name: 'Lindau', lat: '47.555984', lng: '9.684057' },
-            { name: 'Reutin', lat: '47.552563', lng: '9.701841' },
-            { name: 'Dietmannsried', lat: '47.812837', lng: '10.290245' },
-            { name: 'MM', lat: '47.955380', lng: '10.197768' },
-            { name: 'Masi', lat: '47.972948', lng: '10.186935' },
-            { name: 'Buchloe', lat: '48.031909', lng: '10.715616' },
-        ]
+        defaultLocations: [
+            { name: 'Keine Auswahl', lat: null, lng: null, removeable: false },
+            { name: 'Lindau', lat: '47.555984', lng: '9.684057', removeable: false },
+            { name: 'Reutin', lat: '47.552563', lng: '9.701841', removeable: false },
+            { name: 'Dietmannsried', lat: '47.812837', lng: '10.290245', removeable: false },
+            { name: 'MM', lat: '47.955380', lng: '10.197768', removeable: false },
+            { name: 'Masi', lat: '47.972948', lng: '10.186935', removeable: false },
+            { name: 'Buchloe', lat: '48.031909', lng: '10.715616', removeable: false },
+        ],
+
+        customLocations: [
+            { name: 'Custom', lat: '47.555984', lng: '9.684057', removeable: true },
+        ],
+
     }},
 
     mounted(){
-        this.load()
-        this.$q.bex.on('storage.get.response', this.get)
+        this.loadSelected()
+        this.loadCustomLocations()
+        this.$q.bex.on('storage.get.selected.response', this.setSelected)
+        this.$q.bex.on('storage.get.customLocations.response', this.setCustomLocations)
     },
 
     beforeDestroy(){
-        this.$q.bex.off('storage.get.response', this.get)
+        this.$q.bex.off('storage.get.selected.response', this.setSelected)
+        this.$q.bex.off('storage.get.customLocations.response', this.setCustomLocations)
     },
 
-    watch: {
-        // selected(val){
-        //     // this.$q.bex.send('storage.set', { key: '_gps_selected', data: val })
-        // }
+    computed: {
+        locations(){
+            return [...this.defaultLocations, ...this.customLocations]
+        }
     },
 
     methods: {
-        load(){
-            // alert("run load")
-            let s = this.$q.bex.send('storage.get', { key: '_gps_selected' })
-                    .then( r => console.log("response in storage r ", r) )
-
-            console.log("load s?", s)
+        loadSelected(){
+            this.$q.bex.send('storage.get', { key: '_gps_selected', responseTo: 'storage.get.selected.response' })
         },
 
-        get(val){
-            // alert(JSON.stringify(val.data))
+        loadCustomLocations(){
+            this.$q.bex.send('storage.get', { key: '_gps_customLocations', responseTo: 'storage.get.customLocations.response' })
+        },
+
+        setCustomLocations(val){
+            this.customLocations = val.data
+        },
+
+        setSelected(val){
             this.selected = val.data
         },
 
@@ -141,7 +152,17 @@ export default defineComponent({
 
         testPayload(){
             console.log("Running test payload")
-        }
+        },
+
+        addNewLocation(item){
+            this.customLocations.push({...item, removeable: true })
+            this.$q.bex.send('storage.set', { key: '_gps_customLocations', data: this.customLocations })
+        },
+
+        removeLocation(item){
+            this.customLocations = this.customLocations.filter( x => x.name != item.name)
+            this.$q.bex.send('storage.set', { key: '_gps_customLocations', data: this.customLocations })
+        },
 
     }
 })

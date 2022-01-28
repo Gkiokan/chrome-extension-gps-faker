@@ -31,7 +31,7 @@
 export default {
     name: "Location",
 
-    emits: ['done'],
+    emits: ['done', 'add'],
 
     data(){ return {
         location: {
@@ -57,8 +57,18 @@ export default {
 
         save(){
             console.log(this.location)
-            this.clear()
-            this.$emit('done')
+
+            if(!this.location.name && !this.location.lat && !this.location.lng){
+                return this.$q.notify({ 
+                    message: "Alle felder ausfüllen!",
+                    icon: "warning",
+                    color: "negative",
+                    position: "top",
+                })
+            }
+
+            this.$emit('add', this.location)
+            this.cancel()
         }
 
     }

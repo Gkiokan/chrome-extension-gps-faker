@@ -11,21 +11,29 @@ export default function attachBackgroundHooks (bridge /* , allActiveConnections 
 
     if (payload.key === null) {
       chrome.storage.local.get(null, r => {
-        const result = []
+          const result = []
 
-        // Group the items up into an array to take advantage of the bridge's chunk splitting.
-        for (const itemKey in r) {
-          result.push(r[itemKey])
-        }
-        console.log("storage.get", result)
-        bridge.send(event.eventResponseKey, result)
+          // Group the items up into an array to take advantage of the bridge's chunk splitting.
+          for (const itemKey in r) {
+            result.push(r[itemKey])
+          }
+          console.log("storage.get", result)
+          bridge.send(event.eventResponseKey, result)
       })
     } else {
       chrome.storage.local.get([payload.key], r => {
-        console.log("storage.get", r[payload.key])
-        console.log("storage.get event", event.eventResponseKey)
-        bridge.send(event.eventResponseKey, r[payload.key])
-        bridge.send('storage.get.response', r[payload.key])
+          console.log("storage.get " +  payload.key, r[payload.key])
+          // console.log("storage.get event", event.eventResponseKey)
+          bridge.send(event.eventResponseKey, r[payload.key])
+
+          if(event.data.responseTo){
+              console.log("storage.get responseTo", event.data.responseTo)
+              bridge.send(event.data.responseTo, r[payload.key])
+          }
+          else {
+              console.log("storage.get to storage.get.response")
+              bridge.send('storage.get.response', r[payload.key])
+          }
       })
     }
   })
@@ -36,12 +44,6 @@ export default function attachBackgroundHooks (bridge /* , allActiveConnections 
     chrome.storage.local.set({ [payload.key]: payload.data }, () => {
       bridge.send(event.eventResponseKey, payload.data)
     })
-    //
-    // chrome.storage.sync.set(payload, function() {
-    //   console.log('Settings saved');
-    // });
-
-    // localStorage.setItem(payload.key, payload.data))
   })
 
   bridge.on('storage.remove', event => {
