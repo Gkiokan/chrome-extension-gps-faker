@@ -119,10 +119,12 @@ export default defineComponent({
         },
 
         setCustomLocations(val){
+            if(val.data)
             this.customLocations = val.data
         },
 
         setSelected(val){
+            if(val.data)
             this.selected = val.data
         },
 
