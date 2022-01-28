@@ -48,12 +48,17 @@ var inject = function (e) {
     }
   }
 };
-var doMagic = function(fake){
+
+var removeInjection = function(){
     let x = document.getElementById('script_1')
     if(x){
       x.parentNode.removeChild(x)
       console.log("Found old script_1, removed it")
     }
+}
+
+var doMagic = function(fake){
+    removeInjection()
 
     var script_1 = document.createElement('script');
     script_1.setAttribute('id', 'script_1')
@@ -61,6 +66,12 @@ var doMagic = function(fake){
     document.documentElement.appendChild(script_1);
 
     console.log("New magic injection added")
+}
+
+var mapFake = function(selected){
+  fake.coords.latitude = selected.lat
+  fake.coords.longitude = selected.lng
+  return fake
 }
 
 //
@@ -104,17 +115,37 @@ export default function attachContentHooks (bridge) {
 
   bridge.on('test', event => {
       let selected = event.data.data.selected
-      fake.coords.latitude = selected.lat
-      fake.coords.longitude = selected.lng
+      // fake.coords.latitude = selected.lat
+      // fake.coords.longitude = selected.lng
+      let newFake = mapFake(selected)
 
       console.log("Selected getLocation Fake Object", selected)
-      console.log("New fake object", fake)
+      console.log("New fake object", newFake)
       console.log("Test Event recieved", event)
 
-      doMagic(fake)
+      if(newFake.coords.latitude)
+        doMagic(newFake)
+      else
+        removeInjection()
 
       // Not required but resolve our promise.
       bridge.send(event.responseKey)
+  })
+
+  let key = '_gps_selected'
+  chrome.storage.local.get([key], r => {
+    console.log("storage.get initial", r[key])
+    if(r[key]){
+        let newFake = mapFake(r[key])
+
+        if(newFake.coords.latitude){
+          console.log("Found saved storage location, running injction")
+          doMagic(newFake)
+        }
+        else {
+          removeInjection()
+        }
+    }
   })
 
   console.log("Loaded GPS Faker")

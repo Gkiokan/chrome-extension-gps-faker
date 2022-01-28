@@ -25,6 +25,7 @@ export default function attachBackgroundHooks (bridge /* , allActiveConnections 
         console.log("storage.get", r[payload.key])
         console.log("storage.get event", event.eventResponseKey)
         bridge.send(event.eventResponseKey, r[payload.key])
+        bridge.send('storage.get.response', r[payload.key])
       })
     }
   })

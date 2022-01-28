@@ -12,7 +12,7 @@
 
         <q-select outlined dense v-model="selected" :options="locations" class="q-mb-md"
                   label="Aktuelle Auswahl" stack-label
-                  menu-anchor="bottom start" menu-self="bottom start" >
+                  menu-anchor="bottom start" menu-self="bottom start" v-if="false">
             <template v-slot:option="scope">
               <q-item dense v-bind="scope.itemProps">
                 <q-item-section>
@@ -36,9 +36,25 @@
             </template>
         </q-select>
 
-        <q-btn unelevated color="green-8" label="Setze Lokation" @click="setLocation" />
+        <q-list separator class="q-mb-md">
+          <q-item clickable v-ripple  v-for="item in locations" @click="set(item)"
+                  :active="isActive(item)" active-class="text-green">
+            <q-item-section avatar>
+                <q-icon name="gps_not_fixed" v-if="!isActive(item)" />
+                <q-icon name="share_location" v-else />
+            </q-item-section>
+            <q-item-section>
+                <span class="q-mr-md text-weight-bold">{{item.name }}</span>
+                <small>{{item.lat }} | {{item.lng }}</small>
+            </q-item-section>
+            <q-item-section side>  </q-item-section>
+          </q-item>
+        </q-list>
 
-        <q-btn unelevated label="load" @click="load" />
+        <div v-if="false">
+          <q-btn unelevated color="green-8" label="Setze Lokation" @click="setLocation" />
+          <q-btn unelevated label="load" @click="load" />
+        </div>
 
         <q-space style="height: 20px" />
     </div>
@@ -70,10 +86,11 @@ export default defineComponent({
 
     mounted(){
         this.load()
+        this.$q.bex.on('storage.get.response', this.get)
     },
 
     beforeDestroy(){
-
+        this.$q.bex.off('storage.get.response', this.get)
     },
 
     watch: {
@@ -89,6 +106,23 @@ export default defineComponent({
                     .then( r => console.log("response in storage r ", r) )
 
             console.log("load s?", s)
+        },
+
+        get(val){
+            // alert(JSON.stringify(val.data))
+            this.selected = val.data
+        },
+
+        set(val){
+            this.selected = val
+            this.setLocation()
+        },
+
+        isActive(item){
+            if(this.selected)
+              return this.selected.name == item.name
+
+            return false
         },
 
         setLocation(){
