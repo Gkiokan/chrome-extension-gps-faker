@@ -71,6 +71,7 @@ var doMagic = function(fake){
 var mapFake = function(selected){
   fake.coords.latitude = selected.lat
   fake.coords.longitude = selected.lng
+  fake.timestamp = (new Date).getTime()
   return fake
 }
 
