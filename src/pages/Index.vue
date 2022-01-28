@@ -10,7 +10,7 @@
 
         <h3 class="q-mb-none text-h6 text-weight-light">Locations </h3>
 
-        <q-select v-model="selected" :options="locations"
+        <q-select outlined dense v-model="selected" :options="locations" class="q-mb-md"
                   label="Aktuelle Auswahl" stack-label
                   menu-anchor="bottom start" menu-self="bottom start" >
             <template v-slot:option="scope">
@@ -36,11 +36,11 @@
             </template>
         </q-select>
 
-        <q-space style="height: 100px" />
+        <q-btn unelevated color="green-8" label="Setze Lokation" @click="setLocation" />
 
-        <q-btn label="test" @click="test" />
+        <q-btn unelevated label="load" @click="load" />
 
-        <pre>{{ data }}</pre>
+        <q-space style="height: 20px" />
     </div>
 
   </q-page>
@@ -69,25 +69,33 @@ export default defineComponent({
     }},
 
     mounted(){
-        this.$q.bex.on('test', this.testPayload)
+        this.load()
     },
 
     beforeDestroy(){
-        this.$q.bex.off('test', this.testPayload)
+
+    },
+
+    watch: {
+        // selected(val){
+        //     // this.$q.bex.send('storage.set', { key: '_gps_selected', data: val })
+        // }
     },
 
     methods: {
-        getLocation(){
-            console.log("blub")
-            console.log(navigator)
-            navigator.geolocation.getCurrentPosition(function(position) {
-                console.log(position);
-                this.data = position
-            });
+        load(){
+            // alert("run load")
+            let s = this.$q.bex.send('storage.get', { key: '_gps_selected' })
+                    .then( r => console.log("response in storage r ", r) )
+
+            console.log("load s?", s)
         },
 
-        test(){
-            // alert('running test')
+        setLocation(){
+            if(!this.selected) return;
+
+            this.$q.bex.send('storage.set', { key: '_gps_selected', data: this.selected })
+
             this.$q.bex.send('test', { magic: true, selected: this.selected })
                 .then( r => {
                     alert("Standort " + this.selected.name + " gesetzt")
@@ -108,6 +116,6 @@ export default defineComponent({
 .main {
   display: block;
   width: 500px;
-  height: 500px;
+  height: 200px;
 }
 </style>

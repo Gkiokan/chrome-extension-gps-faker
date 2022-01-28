@@ -1,23 +1,7 @@
 // Hooks added here have a bridge allowing communication between the BEX Content Script and the Quasar Application.
 // More info: https://quasar.dev/quasar-cli/developing-browser-extensions/content-hooks
 
-// const getLocation = function(){
-//   console.log("running get location")
-//
-//   navigator.geolocation.getCurrentPosition(function(position) {
-//       console.log(position);
-//   });
-// }
-//
-//
-// const backup = navigator.geolocation.getCurrentPosition
-// console.log(backup)
-// const newPosition = function(success){
-//     console.log("odl override")
-//     success(fake)
-// }
-//
-// navigator.geolocation.getCurrentPosition = newPosition
+// import { fake, inject, doMagic } from './inject.js'
 
 
 let fake = {
@@ -33,6 +17,7 @@ let fake = {
     },
     timestamp: 99999999
 }
+
 
 var inject = function (e) {
   if (navigator) {
@@ -63,8 +48,6 @@ var inject = function (e) {
     }
   }
 };
-
-
 var doMagic = function(fake){
     let x = document.getElementById('script_1')
     if(x){
@@ -80,9 +63,9 @@ var doMagic = function(fake){
     console.log("New magic injection added")
 }
 
+//
 // if (document.documentElement.dataset.geolocscriptallow !== "true") {
 //   var script_2 = document.createElement('script');
-//   script_2.setAttribute('id', 'script_2')
 //   script_2.textContent = `{
 //     const iframes = window.top.document.querySelectorAll("iframe[sandbox]");
 //     for (var i = 0; i < iframes.length; i++) {
@@ -102,6 +85,7 @@ var doMagic = function(fake){
 //   }`;
 //   window.top.document.documentElement.appendChild(script_2);
 // }
+
 
 export default function attachContentHooks (bridge) {
   // Hook into the bridge to listen for events sent from the client BEX.
