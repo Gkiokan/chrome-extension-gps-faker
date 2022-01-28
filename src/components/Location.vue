@@ -1,6 +1,6 @@
 <template lang="html">
 <div>
-    <h3 class="q-mb-none text-h6 text-weight-light">Neue Location anlegen </h3>
+    <h3 class="q-mb-none text-h6 text-weight-light">Neuen Standort anlegen </h3>
 
     <q-input filled dense v-model="location.name" class="q-mb-sm" label="Name" stack-label />
 
@@ -13,9 +13,16 @@
         </div>
     </div>
 
-    <q-space style='height: 20px' />
+    <q-space style='height: 10px' />
 
-    <q-btn dense unelevated class="q-px-px full-width" color="green-8" label="save" @click="save" />
+    <div class='row q-col-gutter-sm'>
+        <div class='col'>
+            <q-btn dense no-caps unelevated class="q-px-px full-width" color="green-8" label="Standort hinzufügen" @click="save" />
+        </div>
+        <div class=''>
+            <q-btn dense no-caps unelevated class="q-px-md" color="red" label="Abbruch" @click="cancel" />
+        </div>
+    </div>
 
 </div>
 </template>
@@ -41,6 +48,11 @@ export default {
                 lat: '',
                 lng: ''
             }
+        },
+
+        cancel(){
+            this.clear()
+            this.$emit('done')
         },
 
         save(){

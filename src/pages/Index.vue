@@ -4,15 +4,15 @@
     <div class="main">
         <h1 class="q-mt-none q-mb-md text-h4 text-weight-light">GPS Faker </h1>
 
-        <q-btn dense no-caps class="q-px-md" color="grey-9" label="Neue location" @click="showNewLocation = !showNewLocation" />
+        <q-btn dense no-caps class="q-px-md" color="grey-9" label="Neueen Standort anlegen" @click="showNewLocation = !showNewLocation" v-if="!showNewLocation" />
 
         <Location v-if="showNewLocation" @done="showNewLocation = false" />
 
-        <h3 class="q-mb-none text-h6 text-weight-light">Locations </h3>
+        <h3 class="q-mb-none text-h6 text-weight-light">Standorte </h3>
 
-        <q-select outlined dense v-model="selected" :options="locations" class="q-mb-md"
+        <q-select outlined dense v-model="selected" :options="locations" class="q-mb-md" v-if="false"
                   label="Aktuelle Auswahl" stack-label
-                  menu-anchor="bottom start" menu-self="bottom start" v-if="false">
+                  menu-anchor="bottom start" menu-self="bottom start">
             <template v-slot:option="scope">
               <q-item dense v-bind="scope.itemProps">
                 <q-item-section>
@@ -39,15 +39,17 @@
         <q-list separator class="q-mb-md">
           <q-item clickable v-ripple  v-for="item in locations" @click="set(item)"
                   :active="isActive(item)" active-class="text-green">
-            <q-item-section avatar>
-                <q-icon name="gps_not_fixed" v-if="!isActive(item)" />
-                <q-icon name="share_location" v-else />
-            </q-item-section>
-            <q-item-section>
-                <span class="q-mr-md text-weight-bold">{{item.name }}</span>
-                <small>{{item.lat }} | {{item.lng }}</small>
-            </q-item-section>
-            <q-item-section side>  </q-item-section>
+
+              <q-item-section avatar>
+                  <q-icon name="gps_not_fixed" v-if="!isActive(item)" />
+                  <q-icon name="share_location" v-else />
+              </q-item-section>
+              <q-item-section>
+                  <span class="q-mr-md text-weight-bold">{{item.name }}</span>
+                  <small>{{item.lat }} | {{item.lng }}</small>
+              </q-item-section>
+              <q-item-section side>  </q-item-section>
+
           </q-item>
         </q-list>
 
