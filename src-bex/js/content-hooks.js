@@ -28,7 +28,7 @@ var inject = function (e) {
           "value": function (success) {
             const OLD = success;
             success = function (position) {
-              if ("timestamp" in position) Object.defineProperty(position, 'timestamp', {"value": e.timestamp !== null ? Number(e.timestamp) : null});
+              // if ("timestamp" in position) Object.defineProperty(position, 'timestamp', {"value": e.timestamp !== null ? Number(e.timestamp) : null});
               if ("coords" in position) {
                 Object.defineProperty(position.coords, 'speed', {"value": e.coords.speed !== null ? Number(e.coords.speed) : null, configurable: true, writable: true });
                 Object.defineProperty(position.coords, 'heading', {"value": e.coords.heading !== null ? Number(e.coords.heading) : null, configurable: true, writable: true });
