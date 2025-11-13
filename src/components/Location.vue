@@ -2,16 +2,18 @@
 <div>
     <h3 class="q-my-none text-h6 text-weight-light">Neuen Standort anlegen </h3>
 
-    <q-input filled dense v-model="location.name" class="q-mb-sm" label="Name" stack-label />
+    <q-input outlined dense v-model="location.name" class="q-mb-sm" label="Name" stack-label />
 
-    <div class='row q-col-gutter-sm'>
+    <div class='row q-col-gutter-sm q-mb-sm'>
         <div class='col'>
-            <q-input filled dense v-model="location.lat" label="Lat" stack-label />
+            <q-input outlined dense v-model="location.lat" label="Lat" stack-label />
         </div>
         <div class='col'>
-            <q-input filled dense v-model="location.lng" label="Lng" stack-label />
+            <q-input outlined dense v-model="location.lng" label="Lng" stack-label />
         </div>
     </div>
+
+    <q-input outlined dense v-model="autoparse" label="Auto Parse (lat,lng)" stack-label />
 
     <q-space style='height: 10px' />
 
@@ -23,6 +25,7 @@
             <q-btn dense no-caps unelevated class="q-px-md" color="red" label="Abbruch" @click="cancel" />
         </div>
     </div>
+    
 
 </div>
 </template>
@@ -38,8 +41,28 @@ export default {
             name: '',
             lat: '',
             lng: ''
-        }
+        },
+        autoparse: '',
     }},
+
+    watch: {
+        autoparse(s){
+            if( !s )
+                return;
+            
+            // s = "48.80550062508564, 9.516472511724706"
+            let split = s.split(',').map( x => x.trim() )
+            console.log("[app][auto-parse]", split)
+
+            if( split.length != 2 )
+                return;            
+
+            this.location.lat = split[0]
+            this.location.lng = split[1]
+
+            this.autoparse = ''
+        }
+    },
 
     methods: {
         clear(){
