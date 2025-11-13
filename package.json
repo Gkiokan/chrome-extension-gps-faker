@@ -1,8 +1,8 @@
 {
   "name": "gpsfakerv2",
-  "version": "0.0.1",
+  "version": "3.3.0",
   "description": ".",
-  "productName": "gpsfakerv2",
+  "productName": "GPS Faker v2",
   "author": "Gkiokan Sali <gkiokan@hotmail.de>",
   "type": "module",
   "private": true,

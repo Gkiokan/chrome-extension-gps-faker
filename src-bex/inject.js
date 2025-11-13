@@ -75,6 +75,7 @@ function inject(e) {
             }
             });
             document.documentElement.dataset.geolocscriptallow = true;
+            console.log('[GPS Faker] Geolocation overridden to', e.coords.latitude, e.coords.longitude)
         }
         }
     }

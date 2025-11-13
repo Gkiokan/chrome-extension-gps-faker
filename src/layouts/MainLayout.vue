@@ -4,7 +4,7 @@
         <q-toolbar-title class="text-subtitle2">
             GPS Faker 
             <span class="text-bold text-grey-6"> V2 </span>
-            <small class="text-red-5 q-pl-sm">v{{ $q.version }}</small>
+            <small class="text-red-5 q-pl-sm"> v{{json.version}}|{{ $q.version }}</small>
         </q-toolbar-title>        
     </q-header>
 
@@ -17,6 +17,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
+import json from './../../package.json'
 
 const leftDrawerOpen = ref(false)
 
