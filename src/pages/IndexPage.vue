@@ -38,7 +38,7 @@
         </q-item>
       </q-list>
 
-      <pre>{{selected}}</pre>
+      <pre v-if="debug">{{selected}}</pre>
 
       <q-space style="height: 20px" />
     </div>
@@ -57,6 +57,7 @@ const $q = useQuasar()
 const bex = $q.bex
 
 // --- Reactive state ---
+const debug           = false
 const loading         = ref(false)
 
 const showNewLocation = ref(false)
