@@ -1,14 +1,21 @@
 <template>
   <q-page padding>
     <div class="main">
-      <q-btn dense rounded no-caps
-        class="q-px-md" color="grey-9"
-        label="Neuen Standort anlegen"
-        @click="showNewLocation = !showNewLocation"
-        v-if="!showNewLocation"
-      />
+
+      <div class="flex flex-wrap q-gutter-md" v-if="!isEdit">
+          <q-btn dense rounded no-caps class="q-px-md" color="grey-9" label="Neuen Standort anlegen"
+            @click="showNewLocation = !showNewLocation" />
+
+          <q-btn dense rounded no-caps class="q-px-md" color="grey-10" label="Import"
+            @click="showImporter = !showImporter" />
+
+          <q-btn dense rounded no-caps class="q-px-md" color="red-10" label="Export"
+            @click="openExporter()" />
+      </div>
 
       <Location v-if="showNewLocation" @done="showNewLocation = false" @add="addNewLocation" />
+      <Importer v-if="showImporter" @done="showImporter = false" @reload="loadCustomLocations" />
+      <Exporter v-if="showExporter" @done="showExporter = false" ref="exporterRef" />
 
       <h3 class="q-mb-none text-h6 text-weight-light">Standorte</h3>
 
@@ -39,17 +46,31 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useQuasar } from 'quasar'
 
 import Location from 'components/Location.vue'
+import Importer from 'components/Importer.vue'
+import Exporter from 'components/Exporter.vue'
 
 const $q = useQuasar()
 const bex = $q.bex
 
 // --- Reactive state ---
 const loading         = ref(false)
+
 const showNewLocation = ref(false)
+const showImporter    = ref(false)
+const showExporter    = ref(false)
+const exporterRef     = ref(null)
+
+const isEdit          = computed( () => {
+  if( showNewLocation.value||showImporter.value||showExporter.value )
+    return true 
+
+  return false
+})
+
 const selected        = ref(null)
 const customLocations = ref([])
 
@@ -64,6 +85,12 @@ const defaultLocations = [
 ]
 
 const locations = computed(() => [...defaultLocations, ...customLocations.value])
+
+const openExporter = async () => {
+  showExporter.value = true
+  await nextTick()
+  exporterRef.value?.load()
+}
 
 function setCustomLocations(val) {
   if (val.data) customLocations.value = val.data
