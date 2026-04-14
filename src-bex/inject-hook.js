@@ -11,7 +11,7 @@ let fake = {
         longitude: 22.22222,
         magic: "g was here",
     },
-    timestamp: 99999999
+    timestamp: Date.now(),
 }
 
 var mapFake = function(selected){

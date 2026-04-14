@@ -1,4 +1,4 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./MainLayout-CxwR9D2B.js","./use-router-link-hQY7-XAE.js","./QItem-CzR3VSAU.js","./IndexPage-D6MTWhRR.js","./QBtn-CG3O_rXo.js","./IndexPage-oDG6DYBY.css","./ErrorNotFound-75_c-XIY.js"])))=>i.map(i=>d[i]);
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./MainLayout-BLt26VAt.js","./use-router-link-BxF7shzN.js","./QItem-BWt2HYmr.js","./IndexPage-Dkdc1hDP.js","./QBtn-CSz0bQQI.js","./IndexPage-Blavs8jl.css","./ErrorNotFound-DLy-e8Ub.js"])))=>i.map(i=>d[i]);
 var __defProp = Object.defineProperty;
 var __typeError = (msg) => {
   throw TypeError(msg);
@@ -10102,16 +10102,16 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
 const routes = [
   {
     path: "/",
-    component: () => __vitePreload(() => import("./MainLayout-CxwR9D2B.js"), true ? __vite__mapDeps([0,1,2]) : void 0, import.meta.url),
+    component: () => __vitePreload(() => import("./MainLayout-BLt26VAt.js"), true ? __vite__mapDeps([0,1,2]) : void 0, import.meta.url),
     children: [
-      { path: "", component: () => __vitePreload(() => import("./IndexPage-D6MTWhRR.js"), true ? __vite__mapDeps([3,4,1,2,5]) : void 0, import.meta.url) }
+      { path: "", component: () => __vitePreload(() => import("./IndexPage-Dkdc1hDP.js"), true ? __vite__mapDeps([3,4,1,2,5]) : void 0, import.meta.url) }
     ]
   },
   // Always leave this as last one,
   // but you can also remove it
   {
     path: "/:catchAll(.*)*",
-    component: () => __vitePreload(() => import("./ErrorNotFound-75_c-XIY.js"), true ? __vite__mapDeps([6,4,1]) : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./ErrorNotFound-DLy-e8Ub.js"), true ? __vite__mapDeps([6,4,1]) : void 0, import.meta.url)
   }
 ];
 const createRouter = defineRouter(function() {

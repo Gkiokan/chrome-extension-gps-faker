@@ -1,7 +1,7 @@
-import { Q as QSpinner, a as QBtn, R as Ripple } from "./QBtn-CG3O_rXo.js";
-import { h as hSlot, Q as QIcon } from "./use-router-link-hQY7-XAE.js";
-import { u as useDarkProps, a as useDark, Q as QItem, b as QItemSection } from "./QItem-CzR3VSAU.js";
-import { c as createComponent, g as getCurrentInstance, a as computed, h, e as inject, f as emptyRenderFn, j as layoutKey, k as pageContainerKey, C as quasarKey, i as isRuntimeSsrPreHydration, r as ref, o as onMounted, w as watch, D as onBeforeUpdate, b as onBeforeUnmount, E as formKey, F as debounce, G as injectProp, H as stopAndPrevent, d as nextTick, I as onDeactivated, J as onActivated, K as prevent, T as Transition, L as shouldIgnoreKey, M as client, N as stop, O as createElementBlock, t as openBlock, z as createBaseVNode, x as createVNode, P as createCommentVNode, A as toDisplayString, s as createBlock, u as withCtx, Q as Fragment, R as renderList, S as withDirectives, U as withModifiers } from "./index-D7xU2doX.js";
+import { Q as QSpinner, a as QBtn, R as Ripple } from "./QBtn-CSz0bQQI.js";
+import { h as hSlot, Q as QIcon } from "./use-router-link-BxF7shzN.js";
+import { u as useDarkProps, a as useDark, Q as QItem, b as QItemSection } from "./QItem-BWt2HYmr.js";
+import { c as createComponent, g as getCurrentInstance, a as computed, h, e as inject, f as emptyRenderFn, j as layoutKey, k as pageContainerKey, C as quasarKey, i as isRuntimeSsrPreHydration, r as ref, o as onMounted, w as watch, D as onBeforeUpdate, b as onBeforeUnmount, E as formKey, F as debounce, G as injectProp, H as stopAndPrevent, d as nextTick, I as onDeactivated, J as onActivated, K as prevent, T as Transition, L as shouldIgnoreKey, M as client, N as stop, O as createElementBlock, t as openBlock, z as createBaseVNode, x as createVNode, P as createCommentVNode, A as toDisplayString, s as createBlock, u as withCtx, Q as Fragment, R as renderList, S as withDirectives, U as withModifiers } from "./index-DYWD_XhP.js";
 const roleAttrExceptions = ["ul", "ol"];
 const QList = createComponent({
   name: "QList",
@@ -1930,9 +1930,9 @@ const _sfc_main = {
       bex.send({ event: "setLocation", to: "background", payload: selected.value });
     }
     async function loadSelected() {
-      const selected2 = await bex.send({ event: "storage.get", to: "background", payload: "_gps_selected" });
-      console.log("[app] load selected", selected2);
-      selected2.value = selected2 ?? null;
+      const selectedFromStore = await bex.send({ event: "storage.get", to: "background", payload: "_gps_selected" });
+      console.log("[app] load selected", selectedFromStore);
+      selected.value = selectedFromStore ?? null;
     }
     async function loadCustomLocations() {
       const list = await bex.send({ event: "storage.get", to: "background", payload: "_gps_customLocations" });
@@ -2073,7 +2073,7 @@ const _sfc_main = {
     };
   }
 };
-const IndexPage = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-e123bd5e"]]);
+const IndexPage = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-13f1ae4e"]]);
 export {
   IndexPage as default
 };

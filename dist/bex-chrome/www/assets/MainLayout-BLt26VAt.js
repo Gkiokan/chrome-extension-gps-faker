@@ -1,6 +1,6 @@
-import { c as createComponent, a as computed, h, r as ref, i as isRuntimeSsrPreHydration, o as onMounted, g as getCurrentInstance, b as onBeforeUnmount, n as noop, d as nextTick, l as listenOpts, e as inject, f as emptyRenderFn, w as watch, j as layoutKey, p as provide, k as pageContainerKey, m as reactive, q as onUnmounted, s as createBlock, t as openBlock, u as withCtx, v as resolveComponent, x as createVNode, y as createTextVNode, z as createBaseVNode, A as toDisplayString, B as unref } from "./index-D7xU2doX.js";
-import { h as hSlot, a as hUniqueSlot, c as css, g as getElement, b as hMergeSlot } from "./use-router-link-hQY7-XAE.js";
-import "./QItem-CzR3VSAU.js";
+import { c as createComponent, a as computed, h, r as ref, i as isRuntimeSsrPreHydration, o as onMounted, g as getCurrentInstance, b as onBeforeUnmount, n as noop, d as nextTick, l as listenOpts, e as inject, f as emptyRenderFn, w as watch, j as layoutKey, p as provide, k as pageContainerKey, m as reactive, q as onUnmounted, s as createBlock, t as openBlock, u as withCtx, v as resolveComponent, x as createVNode, y as createTextVNode, z as createBaseVNode, A as toDisplayString, B as unref } from "./index-DYWD_XhP.js";
+import { h as hSlot, a as hUniqueSlot, c as css, g as getElement, b as hMergeSlot } from "./use-router-link-BxF7shzN.js";
+import "./QItem-BWt2HYmr.js";
 const QToolbarTitle = createComponent({
   name: "QToolbarTitle",
   props: {
@@ -647,7 +647,7 @@ createComponent({
   }
 });
 const name = "gpsfakerv2";
-const version = "3.5.0";
+const version = "3.6.0";
 const description = ".";
 const productName = "GPS Faker v2";
 const author = "Gkiokan Sali <gkiokan@hotmail.de>";

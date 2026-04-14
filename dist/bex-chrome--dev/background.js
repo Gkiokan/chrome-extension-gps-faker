@@ -681,7 +681,7 @@
   }
   if (true) {
     const devServerPort = 9600;
-    const wsToken = "LJXSCN7KURXI";
+    const wsToken = "AKHJaQsZ1X7z";
     interceptRequests(devServerPort);
     connectToDevServer(devServerPort, wsToken);
   }

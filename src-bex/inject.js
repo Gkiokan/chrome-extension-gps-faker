@@ -17,81 +17,75 @@
 
 
 // Expose helper globally (for debugging)
-window.__GPS_FAKER__ = {
-  setFakePosition(fake) {
-    console.log('[GPS Faker] Setting fake GPS location', fake)
-    overrideGeolocation(fake)
-  },
-  inject,
-}
+// window.__GPS_FAKER__ = {
+//   setFakePosition(fake) {
+//     console.log('[GPS Faker] Setting fake GPS location', fake)
+//     overrideGeolocation(fake)
+//   },
+//   inject,
+// }
 
-// Utility function
-function overrideGeolocation(fake) {
-  if (!fake || !fake.coords.latitude || !fake.coords.longitude) {
-    console.warn('[GPS Faker] Invalid fake location:', fake)
-    return
-  }
+// === inject.js ===
+(function() {
+  // This variable holds the "active" fake location
+  let activeFake = null;
 
-  console.log('[GPS Faker] Overriding navigator.geolocation...')
+  function setupHook() {
+    if (!navigator.geolocation || !navigator.geolocation.__proto__) {
+      console.log("No Navigator geolocation or __proto__ found")
+      return;
+    }
 
-  navigator.geolocation.getCurrentPosition = function (success, error) {
-    success({
+    const proto = navigator.geolocation.__proto__;
+    const originalGet = proto.getCurrentPosition;
+    const originalWatch = proto.watchPosition;
+
+    // A helper to create the fake response object
+    const createFakePosition = (fake) => ({
       coords: {
         latitude: parseFloat(fake.coords.latitude),
         longitude: parseFloat(fake.coords.longitude),
-        accuracy: 10
+        accuracy: fake.coords.accuracy || 10,
+        altitude: null,
+        altitudeAccuracy: null,
+        heading: null,
+        speed: null,
       },
       timestamp: Date.now()
-    })
+    });
+
+    // Override getCurrentPosition
+    proto.getCurrentPosition = function(success, error, options) {
+      if (activeFake) {
+        console.log('[GPS Faker] Intercepted getCurrentPosition');
+        // We use a timeout to make it feel "real" (async)
+        return setTimeout(() => success(createFakePosition(activeFake)), 0);
+      }
+      return originalGet.apply(this, arguments);
+    };
+
+    // Override watchPosition
+    proto.watchPosition = function(success, error, options) {
+      if (activeFake) {
+        console.log('[GPS Faker] Intercepted watchPosition');
+        const intervalId = setInterval(() => success(createFakePosition(activeFake)), 1000);
+        return intervalId; // Return an ID so clearWatch works
+      }
+      return originalWatch.apply(this, arguments);
+    };
+
+    console.log('[GPS Faker] Hooks installed on navigator.geolocation');
   }
 
-  navigator.geolocation.watchPosition = navigator.geolocation.getCurrentPosition
-  console.log('[GPS Faker] Geolocation overridden to', fake.coords.latitude, fake.coords.longitude)
-}
+  // Initialize hooks immediately
+  setupHook();
 
-// og function
-function inject(e) {
-    if (navigator) {
-        if (navigator.geolocation) {
-        if (navigator.geolocation.__proto__) {
-            const getCurrentPosition = navigator.geolocation.__proto__.getCurrentPosition;
-            Object.defineProperty(navigator.geolocation.__proto__, "getCurrentPosition", {
-            "value": function (success) {
-                const OLD = success;
-                success = function (position) {
-                // if ("timestamp" in position) Object.defineProperty(position, 'timestamp', {"value": e.timestamp !== null ? Number(e.timestamp) : null});
-                if ("coords" in position) {
-                    Object.defineProperty(position.coords, 'speed', {"value": e.coords.speed !== null ? Number(e.coords.speed) : null, configurable: true, writable: true });
-                    Object.defineProperty(position.coords, 'heading', {"value": e.coords.heading !== null ? Number(e.coords.heading) : null, configurable: true, writable: true });
-                    Object.defineProperty(position.coords, 'latitude', {"value": e.coords.latitude !== null ? Number(e.coords.latitude) : null, configurable: true, writable: true });
-                    Object.defineProperty(position.coords, 'accuracy', {"value": e.coords.accuracy !== null ? Number(e.coords.accuracy) : null, configurable: true, writable: true });
-                    Object.defineProperty(position.coords, 'altitude', {"value": e.coords.altitude !== null ? Number(e.coords.altitude) : null, configurable: true, writable: true });
-                    Object.defineProperty(position.coords, 'longitude', {"value": e.coords.longitude !== null ? Number(e.coords.longitude) : null, configurable: true, writable: true });
-                    Object.defineProperty(position.coords, 'altitudeAccuracy', {"value": e.coords.altitudeAccuracy !== null ? Number(e.coords.altitudeAccuracy) : null, configurable: true, writable: true });
-                }
-                OLD.apply(this, arguments);
-                };
-                return getCurrentPosition.apply(this, arguments);
-            }
-            });
-            document.documentElement.dataset.geolocscriptallow = true;
-            console.log('[GPS Faker] Geolocation overridden to', e.coords.latitude, e.coords.longitude)
-        }
-        }
+  // Listen for messages from inject-hook.js
+  window.addEventListener('message', (event) => {
+    if (event.source !== window) return;
+    if (event.data && event.data.type === 'gps.set') {
+      activeFake = event.data.fake;
+      console.log('[GPS Faker] Active location updated to:', activeFake.coords.latitude, activeFake.coords.longitude);
     }
-};
-
-window.addEventListener('message', (event) => {
-    console.log("[GPS Faker][message]", event)
-    if (event.source !== window) return
-    if (!event.data || event.data.type !== 'gps.set') return
-  
-    const fake = event.data.fake
-    console.log('[GPS Faker] Received gps.set via postMessage', fake)
-    // overrideGeolocation(fake)
-    inject(fake)
-
-    // setTimeout( () => window.location.reload(), 200 )
-})
-
-console.log('[GPS Faker] inject.js loaded in MAIN world')
+  });
+})();

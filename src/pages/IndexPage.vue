@@ -120,11 +120,6 @@ function setLocation() {
 
   bex.send({ event: 'storage.set', to: 'background', payload: { key: '_gps_selected', value: selected.value } })
   bex.send({ event: 'setLocation', to: 'background', payload: selected.value })
-
-  // $q.notify({
-  //   type: 'positive',
-  //   message: `Standort ${selected.value.name} gesetzt`
-  // })        
 }
 
 /**
@@ -132,9 +127,9 @@ function setLocation() {
  */
 async function loadSelected() {
     // bex.send('storage.get', { key: '_gps_selected', responseTo: 'storage.get.selected.response' })
-    const selected = await bex.send({ event: 'storage.get', to: 'background', payload: '_gps_selected' })
-    console.log("[app] load selected", selected)
-    selected.value = selected ?? null  
+    const selectedFromStore = await bex.send({ event: 'storage.get', to: 'background', payload: '_gps_selected' })
+    console.log("[app] load selected", selectedFromStore)
+    selected.value = selectedFromStore ?? null  
 }
 
 async function loadCustomLocations() {
