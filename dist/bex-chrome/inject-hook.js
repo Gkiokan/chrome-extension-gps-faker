@@ -662,23 +662,15 @@
     return fake;
   };
   function doMagic(fake2) {
-    console.log("[hook] doMagic", fake2);
-    setTimeout(() => {
-      console.log("[hook] sending post message to inject", fake2);
-      window.postMessage({ type: "gps.set", fake: fake2 }, "*");
-    }, 50);
+    if (fake2 && (fake2.coords.latitude == null || fake2.coords.longitude == null)) fake2 = null;
+    console.log("[hook] sending post message to inject", fake2);
+    window.postMessage({ type: "gps.set", fake: fake2 }, "*");
   }
   function initCall() {
     let key = "_gps_selected";
     chrome.storage.local.get([key], (r) => {
       console.log("[hook] storage.get initial", r[key]);
-      if (r[key]) {
-        let newFake = mapFake(r[key]);
-        if (newFake.coords.latitude) {
-          console.log("[hook] Found saved storage location, running injction");
-          doMagic(newFake);
-        }
-      }
+      doMagic(r[key] ? mapFake(r[key]) : null);
     });
   }
   initCall();
@@ -689,8 +681,8 @@
     console.error("[hook] Failed to connect to background:", err);
   });
   bridge.on("test", async ({ payload }) => {
-    console.log("[hook] event received", payload, mapFake(payload.selected));
-    doMagic(mapFake(payload.selected));
+    console.log("[hook] event received", payload);
+    doMagic(payload.selected ? mapFake(payload.selected) : null);
     return { success: true };
   });
   bridge.on("contentScriptReady", ({ from }) => {

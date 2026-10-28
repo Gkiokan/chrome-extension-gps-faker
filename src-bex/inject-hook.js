@@ -21,26 +21,18 @@ var mapFake = function(selected){
     return fake
 }
 
+// Sends null when no location is selected so inject.js falls back to the real GPS
 function doMagic(fake){
-    console.log("[hook] doMagic", fake)
-    setTimeout(() => {
-        console.log("[hook] sending post message to inject", fake)
-        window.postMessage({ type: 'gps.set', fake }, '*')
-    }, 50);    
+    if(fake && (fake.coords.latitude == null || fake.coords.longitude == null)) fake = null
+    console.log("[hook] sending post message to inject", fake)
+    window.postMessage({ type: 'gps.set', fake }, '*')
 }
 
 function initCall(){
     let key = '_gps_selected'
     chrome.storage.local.get([key], r => {
       console.log("[hook] storage.get initial", r[key])
-      if(r[key]){
-          let newFake = mapFake(r[key])
-  
-          if(newFake.coords.latitude){
-            console.log("[hook] Found saved storage location, running injction")
-            doMagic(newFake)
-          }
-      }
+      doMagic(r[key] ? mapFake(r[key]) : null)
     })
 }
 
@@ -60,8 +52,8 @@ bridge.connectToBackground()
 
   
 bridge.on('test', async ({ payload }) => {
-    console.log("[hook] event received", payload, mapFake(payload.selected))
-    doMagic( mapFake(payload.selected) )
+    console.log("[hook] event received", payload)
+    doMagic( payload.selected ? mapFake(payload.selected) : null )
     return { success: true }
 })
 

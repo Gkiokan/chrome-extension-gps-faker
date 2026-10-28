@@ -49,12 +49,16 @@
         "css": [ "assets/content.css" ],
         "js": [ "inject.js" ],
         "run_at": "document_start",
+        "all_frames": true,
+        "match_about_blank": true,
         "world": "MAIN"
       },
       {
         "matches": [ "<all_urls>" ],
         "js": [ "inject-hook.js" ],
-        "run_at": "document_start"
+        "run_at": "document_start",
+        "all_frames": true,
+        "match_about_blank": true
       }
     ]
   },
