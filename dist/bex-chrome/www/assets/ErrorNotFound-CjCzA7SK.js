@@ -1,6 +1,6 @@
-import { a as QBtn } from "./QBtn-DYKs3ymu.js";
-import { O as createElementBlock, t as openBlock, z as createBaseVNode, x as createVNode } from "./index-BzPTVn71.js";
-import "./use-router-link-COCc-6XW.js";
+import { a as QBtn } from "./QBtn-HScnO226.js";
+import { O as createElementBlock, t as openBlock, z as createBaseVNode, x as createVNode } from "./index-BYVeDA-i.js";
+import "./use-router-link-iAjfPZQg.js";
 const _hoisted_1 = { class: "fullscreen bg-blue text-white text-center q-pa-md flex flex-center" };
 const _sfc_main = {
   __name: "ErrorNotFound",

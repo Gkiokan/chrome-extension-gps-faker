@@ -27,6 +27,19 @@
         return originalJson.apply(this, arguments).then(forceFlags);
       };
     }
+    const forceNative = (cap) => {
+      if (cap && typeof cap === "object") cap.isNativePlatform = () => true;
+      return cap;
+    };
+    let capacitor = forceNative(window.Capacitor);
+    Object.defineProperty(window, "Capacitor", {
+      configurable: true,
+      enumerable: true,
+      get: () => capacitor,
+      set: (value) => {
+        capacitor = forceNative(value);
+      }
+    });
     const isUsable = (fake) => fake && Number.isFinite(parseFloat(fake.coords.latitude)) && Number.isFinite(parseFloat(fake.coords.longitude));
     function createFakePosition(fake) {
       const values = {

@@ -67,6 +67,26 @@
   }
 
   // ---------------------------------------------------------------------------
+  // iOS / Android device check override
+  // The site rejects non-native platforms via Capacitor.isNativePlatform().
+  // Capacitor routes plugins through its internal platform detection, not this
+  // function, so the app keeps running as "web" while the check passes.
+  // Only touches pages that actually load Capacitor.
+  // ---------------------------------------------------------------------------
+  const forceNative = (cap) => {
+    if (cap && typeof cap === 'object') cap.isNativePlatform = () => true;
+    return cap;
+  };
+
+  let capacitor = forceNative(window.Capacitor);
+  Object.defineProperty(window, 'Capacitor', {
+    configurable: true,
+    enumerable: true,
+    get: () => capacitor,
+    set: (value) => { capacitor = forceNative(value); },
+  });
+
+  // ---------------------------------------------------------------------------
   // Geolocation override
   // ---------------------------------------------------------------------------
   const isUsable = (fake) => fake && Number.isFinite(parseFloat(fake.coords.latitude)) && Number.isFinite(parseFloat(fake.coords.longitude));
